@@ -1,6 +1,6 @@
 # agile-tweetviz
 
-Tweet analysis and visualization tool implemented in Python using Tweepy.
+Tweet analysis and visualization tool implemented in Python using Tweepy. (Software Engineering Group Project)
 
 ## Getting Started
 
