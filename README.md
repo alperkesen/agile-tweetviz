@@ -28,4 +28,4 @@ $ python TweetViz/runserver.py
 
 In [localhost](http://localhost:5555/), you can see the main page:
 
-![Main Page](https://raw.githubusercontent.com/alperkesen/agile-tweetviz/master/imgs/mainpage.png)
+![Main Page](imgs/mainpage.png)
