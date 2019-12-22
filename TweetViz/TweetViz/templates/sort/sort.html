@@ -1,0 +1,140 @@
+﻿{% extends "./layout.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">Tweets</div>
+        <div class="panel-body" style="max-height: 450px;overflow-y: scroll;">
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Tweet Content</th>
+                            <th>Language</th>
+                            <th>Place</th>
+                            <th>Retweets</th>
+                            <th>Likes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{tableBody}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">Sorting</div>
+        <div class="panel-body">
+            <p>Please indicate the sorting parameters below.</p>
+
+            <form method="POST" action="/sort_tweets" id="sort_form">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        Sorting Method:
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                                <input type="radio" name="sorting_method" value="retweets" id="sort_by_retweets" checked> Sort by retweets
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="sorting_method" value="likes" id="sort_by_likes"> Sort by likes
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="sorting_method" value="date" id="sort_by_date"> Sort by date
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="sorting_method" value="text_length" id="sort_by_text_length"> Sort by text length
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        Sorting Order:
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                                <input type="radio" name="sorting_order" value="ascended" id="ascended" checked> Ascended
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="sorting_order" value="descended" id="descended"> Descended
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                    </div>
+                    <div class="col-sm-10">
+                      <button id="sort" type="submit" name="action" value="sort" class="btn btn-success">Sort and Analyze!</button>
+		              <button id="skip_sort" type="submit" name="action" value="skip_sort" class="btn btn-success">Skip Sort and Analyze!</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default" style="height:300px;width:375px;">
+            <div class="panel-heading">Step 1 - Filtering</div>
+            <div class="panel-body">
+                <p>
+                    As an initial step, you have to apply some sort of filtering to eliminate excessive Twitter API usage.
+                </p>
+                <p>
+                    This can be done by searching for specific tweets by using "Generic Search" option, searching tweets that are sent by a specific user or you can look for Trend Tweets.
+                </p>
+                <p>
+                    Note that the Generic Search option is available only to signed users.
+                </p>
+                <p>
+                    While Tweet retrieval limit is <b>150</b> for registered users, it is <b>25</b> for unregistered users.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default" style="height:300px;width:375px;">
+            <div class="panel-heading">Step 2 - Parsing</div>
+            <div class="panel-body">
+                <p>
+                    After you determine the filtering options, Agile TweetViz will retrieve the tweets that you are looking for for you and will give you an ability to parse them.
+                </p>
+                <p>
+                    You will be able to parse through <b>Regular Expressions.</b> Which we think is a convenient option to select tweets precisely according to the user's needs.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-primary" style="height:300px;width:375px;">
+            <div class="panel-heading">Step 3 - Sorting</div>
+            <div class="panel-body">
+                <p>
+                    Agile TweetViz will apply the regular expression, if specified at all and then will allow you to sort them by replies, likes and retweets etc.
+                </p>
+                <p>
+                    Agile TweetViz will sort the tweets according to your needs and then show them to you. It will also do some analysis and show the results to you.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

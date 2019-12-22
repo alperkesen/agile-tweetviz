@@ -1,0 +1,1 @@
+web: gunicorn --chdir TweetViz heroku_deploy:app --log-file=-

@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+            <div class="card">
+                <article class="card-body">
+                    <h4 class="card-title text-center mb-4 mt-1">Register</h4>
+                    <hr>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <p class="text-center">
+                        {{ messages[0] }}
+                    </p>
+                    {% endif %}
+                    {% endwith %}
+                    <form method="POST" action="./register">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Username:</label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input type="text" class="form-control" name="username" placeholder="Username">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Password:</label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+                                    <input type="password" class="form-control" name="password" placeholder="****">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-7">
+                                {{ recaptcha }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Register</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </article>
+            </div>
+        </div>
+</div>
+
+{% endblock %}

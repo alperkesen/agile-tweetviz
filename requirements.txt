@@ -1,0 +1,8 @@
+Flask
+gunicorn
+Flask-Login
+Flask-SQLAlchemy
+Flask-reCaptcha
+tweepy
+Flask-KVSession
+nltk

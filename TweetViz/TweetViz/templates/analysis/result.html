@@ -1,0 +1,72 @@
+{% extends "./layout.html" %}
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="/static/content/jqcloud.css" />
+<link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" />
+<script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
+
+<style>
+        #map { width: 95%; height: 500px; };
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="alert alert-success" role="alert">
+        Analysis results can be seen below.
+    </div>
+</div>
+
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">Tweets</div>
+        <div class="panel-body" style="max-height: 450px;overflow-y: scroll;">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Tweet Content</th>
+                            <th>Language</th>
+                            <th>Place</th>
+                            <th>Retweets</th>
+                            <th>Likes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{tableBody}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="token" value={{mapbox_access_token}}>
+
+<div class="row">
+    <div class="panel-group" id="accordion" role="tablist">
+        <div class="panel panel-default">
+            <div class="panel-heading">Analysis</div>
+            <div class="panel-body">
+                {{ results }}
+            </div>
+        </div>
+    </div>
+</div>
+    {% endblock %}
+
+    {% block scripts %}
+    <script src="/static/scripts/jqcloud-1.0.4.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+  {{ charts|safe}}
+    </script>
+    <script>
+  $(document).ready(function () {
+      $('#word_cloud').jQCloud({{word_json|safe}});
+  });
+    </script>
+    {% endblock %}

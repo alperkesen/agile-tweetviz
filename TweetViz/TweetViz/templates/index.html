@@ -1,0 +1,212 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+{% if not current_user.is_authenticated %}
+<div class="jumbotron">
+    <h1>Agile TweetViz</h1>
+    <p class="lead">Agile TweetViz is a project for visualization of tweets.</p>
+    <p>To enable all functionalities, you need to login.</p>
+    <p>
+        <a href="{{ url_for('login') }}" class="btn btn-primary btn-large">Login &raquo;</a>
+        <a href="{{ url_for('register') }}" class="btn btn-primary btn-large">Register &raquo;</a>
+    </p>
+</div>
+{% endif %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="row">
+    <div class="alert alert-danger">
+        <strong>Error!</strong> {{ messages[0] }}
+    </div>
+</div>
+{% endif %}
+{% endwith %}
+
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">Filtering</div>
+            <div class="panel-body">
+                <p>To begin, you need to apply filtering for the tweet retrieval part of the project to work.</p>
+                <form method="POST" action="/" id="filterForm">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    <div class="col-sm-8">
+                        <div class="form-group row">
+                            <label for="filterBy" class="col-sm-2 col-form-label">Filter by:</label>
+                            <div class="col-sm-10">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary {% if not current_user.is_authenticated %}disabled{% endif %}" id="btnGenericsearch">Generic Search</button>
+                                    <button type="button" class="btn btn-primary" id="btnUsertweets">User Timeline</button>
+                                    <button type="button" class="btn btn-primary" id="btnTrendtopics">Trend Topics</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info" id="noneSelected">
+                            <strong>Info!</strong> Select a filtering option above to proceed.
+                        </div>
+
+                        <div id="filterByUsername">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Twitter Username:</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <input id="userName" type="text" class="form-control" name="userName" placeholder="Username">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="filterByGenericTweets">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Query String:</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-text-background"></i></span>
+                                        <textarea class="form-control" rows="5" name="searchQuery" id="comment" placeholder="Query..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="filterByTrendTopics">
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <div class="alert alert-info" id="noneSelected">
+                                        <strong>Info!</strong> Click the button below to proceed!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if not current_user.is_authenticated %}
+                        <div class="form-group row">
+                            <label for="captcha" class="col-sm-2 col-form-label">Captcha:</label>
+                            <div class="col-sm-10">
+                                {{ recaptcha }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if not current_user.is_authenticated %}
+                    <div class="col-sm-4">
+                        <div class="alert alert-warning">
+                            <strong>Warning!</strong> Generic Search is only available to registered users!
+                        </div>
+                        <div class="alert alert-warning">
+                            <strong>Warning!</strong> Unregistered users have to solve a captcha to proceed!
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="text-center">
+                                <button id="retrieveButton" type="submit" class="btn btn-primary">Retrieve Tweets!</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-primary" style="height:300px;width:375px;">
+                <div class="panel-heading">Step 1 - Filtering</div>
+                <div class="panel-body">
+                    <p>
+                        As an initial step, you have to apply some sort of filtering to eliminate excessive Twitter API usage.
+                    </p>
+                    <p>
+                        This can be done by searching for specific tweets by using "Generic Search" option, searching tweets that are sent by a specific user or you can look for Trend Topics.
+                    </p>
+                    <p>
+                        Note that the Generic Search option is available only to signed users.
+                    </p>
+                    <p>
+                        While Tweet retrieval limit is <b>150</b> for registered users, it is <b>25</b> for unregistered users.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default" style="height:300px;width:375px;">
+                <div class="panel-heading">Step 2 - Parsing</div>
+                <div class="panel-body">
+                    <p>
+                        After you determine the filtering options, Agile TweetViz will retrieve the tweets that you are looking for for you and will give you an ability to parse them.
+                    </p>
+                    <p>
+                        You will be able to parse through <b>Regular Expressions.</b> Which we think is a convenient option to select tweets precisely according to the user's needs.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default" style="height:300px;width:375px;">
+                <div class="panel-heading">Step 3 - Sorting</div>
+                <div class="panel-body">
+                    <p>
+                        Agile TweetViz will apply the regular expression, if specified at all and then will allow you to sort them by replies, likes and retweets etc.
+                    </p>
+                    <p>
+                        Agile TweetViz will sort the tweets according to your needs and then show them to you. It will also do some analysis and show the results to you.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block scripts %}
+    <script>
+        $(document).ready(function () {
+
+            var areaGenericTweets = $("#filterByGenericTweets");
+            var areaUsername = $("#filterByUsername");
+            var areaTrendTopics = $("#filterByTrendTopics");
+            var noneSelected = $("#noneSelected");
+            var retrieveButton = $("#retrieveButton");
+
+            areaGenericTweets.hide();
+            areaTrendTopics.hide();
+            areaUsername.hide();
+            retrieveButton.hide();
+
+            $("#btnGenericsearch").click(function (e) {
+                if (!$("#btnGenericsearch").hasClass('disabled')) {
+                    $('#filterForm').attr('action', "/filter_genericSearch");
+                    areaGenericTweets.show();
+                    areaTrendTopics.hide();
+                    areaUsername.hide();
+                    noneSelected.hide();
+                    retrieveButton.show();
+                }
+            });
+
+            $("#btnUsertweets").click(function (e) {
+                $('#filterForm').attr('action', "/filter_userTweets");
+                areaGenericTweets.hide();
+                areaTrendTopics.hide();
+                areaUsername.show();
+                noneSelected.hide();
+                retrieveButton.show();
+            });
+
+            $("#btnTrendtopics").click(function (e) {
+                $('#filterForm').attr('action', "/filter_trendTopics_retrieve");
+                areaGenericTweets.hide();
+                areaTrendTopics.show();
+                areaUsername.hide();
+                noneSelected.hide();
+                retrieveButton.show();
+            });
+        });
+    </script>
+    {% endblock %}

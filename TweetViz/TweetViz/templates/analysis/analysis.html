@@ -1,0 +1,112 @@
+{% extends "./layout.html" %}
+
+{% block content %}
+
+<div class="row">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Tweets</div>
+        <div class="panel-body" style="max-height: 450px;overflow-y: scroll;">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Tweet Content</th>
+                            <th>Language</th>
+                            <th>Place</th>
+                            <th>Retweets</th>
+                            <th>Likes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{tableBody}}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">Analysis</div>
+        <div class="panel-body">
+          <p>Please indicate the analysis parameters below.</p>
+          <form method="POST" action="/" id="analyze_form">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+              {% if not current_user.is_authenticated %}
+              <div class="alert alert-warning" role="alert">
+                  Sentiment analysis can not be done if the user is not registered.
+              </div>
+              {% endif %}
+              <div class="form-group row">
+                  <div class="col-sm-2">
+                      Analyzing criteria:
+                  </div>
+                  <div class="col-sm-10">
+                      <label class="btn btn-primary">
+                          <input type="checkbox" name="analyze_method" value="location" id="analyze_by_location"> Location
+                      </label>
+                      <label class="btn btn-primary">
+                        <input type="checkbox" name="analyze_method" value="heatmap" id="analyze_by_location_map"> Heatmap
+                      </label>
+                      <label class="btn btn-primary">
+                          <input type="checkbox" name="analyze_method" value="year" id="analyze_by_year"> Year
+                      </label>
+                      <label class="btn btn-primary">
+                          <input type="checkbox" name="analyze_method" value="hashtag" id="analyze_by_hashtag"> Hashtag
+                      </label>
+                      {% if current_user.is_authenticated %}
+                      <label class="btn btn-primary">
+                          <input type="checkbox" name="analyze_method" value="sentiment" id="analyze_by_sentiment"> Sentiment
+                      </label>
+                      {% endif %}
+                      <label class="btn btn-primary">
+                          <input type="checkbox" name="analyze_method" value="month" id="analyze_by_month"> Month
+                      </label>
+                      <label class="btn btn-primary">
+                          <input type="checkbox" name="analyze_method" value="word_cloud" id="analyze_word_cloud"> Word Cloud
+                      </label>
+		      <label class="btn btn-primary">
+                        <input type="checkbox" name="analyze_method" value="like" id="analyze_by_like"> Like
+			</label>
+			<label class="btn btn-primary">
+                          <input type="checkbox" name="analyze_method" value="retweet" id="analyze_by_retweet"> Retweet
+			  </label>
+
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <div class="col-sm-2">
+                  </div>
+                  <label class="btn btn-primary">
+                      <input type="checkbox" name="analyze_method" value="rtEval" id="analyze_rt" checked> Evaluate RTs ?
+                  </label>
+              </div>
+              <div class="form-group row">
+                  <div class="col-sm-2">
+                  </div>
+                  <div class="col-sm-10">
+                      <button id="analyze" type="submit" class="btn btn-success">Analyze!</button>
+                  </div>
+              </div>
+          </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function () {
+      $("#analyze").click(function (e) {
+	  $("#analyze_form").attr("action", "/analyze_tweets");
+      });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,75 @@
+﻿{% extends "./layout.html" %}
+{% block content %}
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtering</div>
+        <div class="panel-body">
+            <form method="POST" action="/filter_trendTopics" id="trendTweets">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                <div class="col-sm-4">
+                    <div class="alert alert-info" id="noneSelected">
+                        <strong>Info!</strong> Select a trending topic below to search for tweets.
+                    </div>
+                    <div class="form-group row">
+                        <label for="filterBy" class="col-sm-2 col-form-label">Trending Topics:</label>
+                        <div class="col-sm-8">
+                            <div class="list-group">
+                                {{ ttList }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-primary" style="height:300px;width:375px;">
+            <div class="panel-heading">Step 1 - Filtering</div>
+            <div class="panel-body">
+                <p>
+                    As an initial step, you have to apply some sort of filtering to eliminate excessive Twitter API usage.
+                </p>
+                <p>
+                    This can be done by searching for specific tweets by using "Generic Search" option, searching tweets that are sent by a specific user or you can look for Trend Topics.
+                </p>
+                <p>
+                    Note that the Generic Search option is available only to signed users.
+                </p>
+                <p>
+                    While Tweet retrieval limit is <b>150</b> for registered users, it is <b>25</b> for unregistered users.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default" style="height:300px;width:375px;">
+            <div class="panel-heading">Step 2 - Parsing</div>
+            <div class="panel-body">
+                <p>
+                    After you determine the filtering options, Agile TweetViz will retrieve the tweets that you are looking for for you and will give you an ability to parse them.
+                </p>
+                <p>
+                    You will be able to parse through <b>Regular Expressions.</b> Which we think is a convenient option to select tweets precisely according to the user's needs.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default" style="height:300px;width:375px;">
+            <div class="panel-heading">Step 3 - Sorting</div>
+            <div class="panel-body">
+                <p>
+                    Agile TweetViz will apply the regular expression, if specified at all and then will allow you to sort them by replies, likes and retweets etc.
+                </p>
+                <p>
+                    Agile TweetViz will sort the tweets according to your needs and then show them to you. It will also do some analysis and show the results to you.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
