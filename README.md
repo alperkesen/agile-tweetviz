@@ -11,7 +11,7 @@ $ virtualenv tweetviz
 ```
 
 ```bash
-$ activate tweetviz/bin/activate
+$ source tweetviz/bin/activate
 ```
 
 Before running the server, install the requirements.
